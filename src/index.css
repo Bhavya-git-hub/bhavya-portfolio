@@ -79,9 +79,6 @@
   }
 
   body {
-    background-color: var(--color-void);
-    color: var(--color-bone);
-    font-family: var(--font-sans);
     font-synthesis-weight: none;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
@@ -116,6 +113,36 @@
     border-radius: 999px;
   }
   ::-webkit-scrollbar-thumb:hover { background: var(--color-rule-bright); }
+}
+
+/* ---------------------------------------------------------------------------
+   The ground, declared OUTSIDE any cascade layer. This is deliberate and it is
+   load-bearing.
+
+   Tailwind compiles everything in `@layer base` into a real CSS cascade layer,
+   and an unlayered declaration beats a layered one no matter which came first
+   in the stylesheet. On its own page that never shows up. Embedded anywhere
+   that injects its own unlayered reset -- an artifact host, a docs shell, an
+   iframe wrapper -- that host's `body { background: #faf9f7 }` silently wins
+   over a layered `body { background: var(--color-void) }`, and this very dark
+   site renders on a near-white ground with its own light-on-dark text. Which
+   is exactly what happened the first time it was previewed.
+
+   These four declarations are the ones that cannot afford to lose that fight,
+   so they sit unlayered. Everything else stays in @layer base where it belongs.
+--------------------------------------------------------------------------- */
+:root {
+  color-scheme: dark;
+}
+
+html {
+  background-color: var(--color-void);
+}
+
+body {
+  background-color: var(--color-void);
+  color: var(--color-bone);
+  font-family: var(--font-sans);
 }
 
 @layer utilities {
